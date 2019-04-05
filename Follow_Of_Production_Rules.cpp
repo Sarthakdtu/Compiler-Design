@@ -9,16 +9,12 @@ struct follow_follow_terminals{
 
 set<char> firstof(map<char, set<char> > First, string q, map<char, bool> isTerminal)
 {
-    cout<<"\nFinding first of : "<<q;
+
     set<char> first_of_q;
-   // cout<<isTerminal['c'];
-   // cout<<q[0];
     for(int i=0;i<q.size();i++)
     {
-    cout<<isTerminal[q[i]];
-        if(isTerminal[q[i]]==1)
+        if(isTerminal[q[i]])
         {
-            cout<<"\nFound Terminal "<<q[i];
             first_of_q.insert(q[i]);
             return first_of_q;
         }
@@ -31,9 +27,6 @@ set<char> firstof(map<char, set<char> > First, string q, map<char, bool> isTermi
             }
         }
     }
-    cout<<"Loop done";
-    for(set<char> ::iterator itr =first_of_q.begin();itr!=first_of_q.end();itr++)
-        cout<<*itr<<" , ";
     return first_of_q;
 }
 
@@ -50,12 +43,9 @@ void find_follow(map<char, follow_follow_terminals> &Follow ,map<char, set<char>
             char S =itr->first;
             if(rule.size()==1)
             {
-                //cout<<"entering in 1";
-                //cout<<rule[0];
                 if(!isTerminal[rule[0]])
-                {   //cout<<"not Terminal";
+                {
                     char R =rule[0];
-                    //cout<<"R is "<<R;
                     Follow[R].follow.insert(S);
                 }
             }
@@ -64,13 +54,8 @@ void find_follow(map<char, follow_follow_terminals> &Follow ,map<char, set<char>
                 for(int j=0;j<rule.size()-1;j++)
                 {
                     char R = rule[j];
-                    cout<<"\nFinding first for "<<R;
                     if(isTerminal[R])
-                    {
-                        //cout<<R<<" is a terminal ";
                         continue;
-                    }
-                    //cout<<"\nNot terminal";
                     string q = rule.substr(j+1, rule.size());
                     set<char>first_of_q = firstof(First, q, isTerminal);
                     Follow[R].follow_terminals.insert(first_of_q.begin(), first_of_q.end());
@@ -99,12 +84,12 @@ void find_first(char symbol, map<char, set<char> > &First, map<char, vector<stri
 
         if(isTerminal[rule[0]])
         {
-            //cout<<"Terminal ";
+
             First[symbol].insert(rule[0]);
         }
         else if(rule[0]=='{')
         {
-            //cout<<"NULL";
+
             First[symbol].insert(rule[0]);
             should_contain_null[symbol]=true;
         }
@@ -190,6 +175,7 @@ void find_Follow(char start_symbol, vector<char> terminals, vector<char> non_ter
 
 
     map<char, set<char> >::iterator itr=Follow.begin();
+    cout<<endl;
     while(itr!=Follow.end())
     {
         cout<<"Follow( ";
@@ -202,7 +188,6 @@ void find_Follow(char start_symbol, vector<char> terminals, vector<char> non_ter
         cout<<"]\n";
         itr++;
     }
-
 }
 
 void input(){
@@ -246,7 +231,7 @@ void input(){
     cout<<"Enter number of Production Rules : ";
     cin>>num_prod_rules;
     cout<<endl;
-    cout<<"Enter Production Rules, use '{'  for null \n";
+    cout<<"Enter Production Rules(A->BC), use '{'  for null \n";
     for(int i=0;i<num_prod_rules;i++)
     {
         char start;
@@ -254,11 +239,9 @@ void input(){
         cin>>rule;
         start = rule[0];
         rule = rule.substr(3,rule.size());
-        //cout<<"Rule : "<<rule;
         production_rules[start].push_back(rule);
         if(rule[3]=='{')
             isNull[start] = true;
-        cout<<endl;
     }
     cout<<endl;
 
